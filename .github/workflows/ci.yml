@@ -13,12 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 仓库不提交 lock 文件：setup-node 不能开 cache: npm，装依赖也只能用 install
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: npm
+          node-version: '22'
 
-      # 仓库不提交 lock 文件，所以用 install 而不是 ci
       - name: 安装依赖
         run: npm install --no-audit --no-fund
 
