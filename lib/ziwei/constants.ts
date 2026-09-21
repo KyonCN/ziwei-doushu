@@ -20,7 +20,7 @@ export const SHICHEN = [
   { branch: 11, name: '亥时', range: '21:00-23:00' },
 ];
 
-// 十二宫名，从命宫顺时针
+// 十二宫名顺序；地支索引从命宫起每减 1 前进一宫（排盘界面为逆时针）
 export const PALACE_NAMES_ORDER = [
   '命宫', '兄弟宫', '夫妻宫', '子女宫', '财帛宫', '疾厄宫',
   '迁移宫', '交友宫', '官禄宫', '田宅宫', '福德宫', '父母宫'
@@ -102,30 +102,12 @@ export const TIANMA_TABLE: Record<number, number> = {
   7: 5,   // 未年 → 巳
 };
 
-// 主星亮度表 [branch]: 主星亮度映射
-// 庙(bright) 旺(bright) 利(normal) 平(normal) 不利(dim) 陷(dim)
-export const STAR_BRIGHTNESS: Record<string, Record<number, string>> = {
-  '紫微': { 2:   'bright', 5: 'bright', 8: 'bright', 11: 'bright',
-            1: 'normal', 4: 'normal', 7: 'bright', 10: 'normal',
-            0: 'normal', 3: 'dim', 6: 'dim', 9: 'normal' },
-  '天机': { 5: 'bright', 11: 'bright', 3: 'bright', 9: 'bright',
-            1: 'normal', 7: 'normal', 2: 'dim', 8: 'dim',
-            0: 'normal', 4: 'normal', 6: 'normal', 10: 'normal' },
-  '太阳': { 3: 'bright', 4: 'bright', 5: 'bright', 6: 'bright',
-            7: 'normal', 8: 'normal', 9: 'normal', 10: 'dim',
-            11: 'dim', 0: 'dim', 1: 'dim', 2: 'normal' },
-  '武曲': { 2: 'bright', 5: 'bright', 8: 'bright', 11: 'bright',
-            0: 'normal', 3: 'normal', 6: 'normal', 9: 'normal',
-            1: 'dim', 4: 'dim', 7: 'dim', 10: 'dim' },
-  '天同': { 0: 'bright', 3: 'bright', 6: 'bright', 9: 'bright',
-            2: 'normal', 5: 'normal', 8: 'normal', 11: 'normal',
-            1: 'dim', 4: 'dim', 7: 'dim', 10: 'dim' },
-  '廉贞': { 2: 'bright', 5: 'bright', 8: 'bright', 11: 'bright',
-            0: 'normal', 3: 'normal', 6: 'normal', 9: 'normal',
-            1: 'dim', 4: 'dim', 7: 'dim', 10: 'dim' },
-};
+// ★ 所有星曜亮度（主星 + 辅星）已迁移到 algorithm.ts → astro.config({ brightness })
+// 覆写范围：9 颗主星 + 3 颗辅星（文曲/铃星/擎羊），共 24 处差异修正。
+// 其余星曜（武曲/廉贞/贪狼/巨门/破军/文昌/火星/陀罗）iztro 默认值与全书一致，无需覆写。
+// 旧 STAR_BRIGHTNESS 是死代码（从未被引用），已在 2026-05-08 清理。
 
-// 主星描述（倪海夏体系）
+// 主星描述（倪师体系）
 export const STAR_DESCRIPTIONS: Record<string, { keywords: string; nature: string; element: string }> = {
   '紫微': { keywords: '帝王·尊贵·独立', nature: '中性偏吉', element: '土' },
   '天机': { keywords: '智慧·机变·谋略', nature: '吉星', element: '木' },

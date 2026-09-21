@@ -1,5 +1,9 @@
 # 紫微斗数 · 开源排盘引擎
 
+[![CI](https://github.com/Renhuai123/ziwei-doushu/actions/workflows/ci.yml/badge.svg)](https://github.com/Renhuai123/ziwei-doushu/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](./LICENSE)
+[![Dataset: CC BY 4.0](https://img.shields.io/badge/dataset-CC%20BY%204.0-green.svg)](./DATASET-LICENSE)
+
 > 🎉 **网站已完成 ICP 备案**（渝ICP备2026013379号-1），主域名已正式上线、全部功能正常访问。
 >
 > 直接访问主域名 **https://metisziwei.com** 即可，排盘 / AI 解读 / 命盘历史等全部功能均已开放。
@@ -27,7 +31,7 @@
 | 体系 | 倪海夏《天纪》正统（纯飞星派已下线） |
 | 内容 | 命盘 JSON + 13 主题解读文本（命格总览、财运、事业、感情、健康等） |
 | 验证 | 男女命差异化 100%、健康含子午流注 100%、女命含妇科保养 100% |
-| 口径 | 与线上 [metisziwei.com](https://metisziwei.com) 完全一致 |
+| 口径 | 由 **v3 版排盘引擎 + 当期断语库**生成；线上引擎在持续更新，新版输出与本数据集可能有差异 |
 
 ### 下载方式
 
@@ -101,6 +105,35 @@ Expand-Archive combined.zip
 | `types.ts` | TypeScript 类型定义 |
 | `cities.ts` | 中国城市经纬度，用于真太阳时校正 |
 | `famous.ts` | 历史名人命盘示例数据 |
+| `wenmo-data.ts` / `wenmo-tables.generated.ts` / `wenmo-config.ts` | 星曜亮度流派数据与对照表、闰月与晚子时口径配置 |
+| `shier-shen.ts` | 十二神煞（本命按生年支起、流年层按流年支起） |
+| `true-solar-time.ts` | 真太阳时校正（经度差 + 均时差） |
+| `dst-cn.ts` | 中国 1986–1991 夏令时年份与区间 |
+| `yunxian-context.ts` | 运限上下文（含童限处理） |
+| `lunar-solar.ts` | 农历 / 公历互转与闰月边界 clamp |
+
+### 引擎能做到什么（与常见排盘库的差异）
+
+| 能力 | 说明 |
+|------|------|
+| **真太阳时校正** | 按出生地经度算时差 + 均时差，避免东西向差一个时辰 |
+| **中国夏令时** | 1986–1991 年的夏令时区间自动扣除 |
+| **闰月四种口径** | 闰月归前月 / 归后月 / 按日切分 / 按本月，可配置，不写死一派 |
+| **晚子时换日** | 23:00–23:59 按次日排盘、00:00–00:59 按本日；换日策略可切换 |
+| **星曜亮度 7 档** | 庙 / 旺 / 得 / 利 / 平 / 不 / 陷，另保留 3 档粗分类做显示降级 |
+| **亮度流派可切换** | 不同流派（含文墨不同版本）对辅星亮度判法不一致，做成开关而非写死 |
+| **四化与飞星** | 生年四化、大限 / 流年四化、飞星自化 |
+| **十二神煞** | 本命层按生年支起，流年层改按流年支起 |
+| **格局判定** | 1100+ 行规则库（紫府同宫、日月并明、七杀朝斗等） |
+
+### 本地验证
+
+```bash
+npm run typecheck   # TypeScript 全量类型检查
+npm test            # 排盘引擎回归（768 盘 × 紫微铁律、夏令时、立春边界、红鸾天喜、样本时辰一致性）
+```
+
+每次 push 与 PR 都会在 GitHub Actions 上跑同一套（见 `.github/workflows/ci.yml`）。
 
 ### 古籍原文（`lib/classics/`）
 
@@ -110,7 +143,7 @@ Expand-Archive combined.zip
 
 ### 前端界面（`app/` + `components/`）
 
-完整的 Next.js 14 前端，包含：
+完整的 Next.js 15 前端，包含：
 
 - 排盘工作台（命盘方格、宫位详情、星曜面板）
 - 合盘分析页
@@ -129,6 +162,7 @@ Expand-Archive combined.zip
 
 以下属于平台运营层，不在开源范围内：
 
+- **断语库**（`lib/ziwei/db-analysis.ts`）：仓库里是一个占位实现，线上是上万行的 13 主题断语内容
 - **AI 解读 prompt**：基于倪海夏体系调教的命盘解读提示词
 - **后端 API**：`/api/interpret`、`/api/heming`、`/api/generate` 等路由实现
 - **用户系统**：登录、短信验证、会员、支付
@@ -138,6 +172,14 @@ Expand-Archive combined.zip
 如果你需要 AI 解读能力，可以参考 `lib/ziwei/patterns.ts` 和 `heming-knowledge.ts` 中的知识库，结合任意 LLM 自行构建 prompt。
 
 ---
+
+## 维护节奏
+
+这个仓库是**排盘引擎 + 数据集的开放快照**，不是一个全职维护的开源产品，说清楚免得大家猜：
+
+- **引擎同步**：随线上发版同步 `lib/ziwei/` 的引擎层并打 tag；断语库、AI 解读、商业站前端不在同步范围内。
+- **Issue**：会看，但回复可能不及时；带复现步骤或具体盘例（年月日时 + 性别 + 哪一条不对）的问题优先处理。
+- **PR**：欢迎，尤其是回归测试、口径修正、文档。动到排盘口径的改动请附上依据（古籍原文或可核对的对照）。
 
 ## 快速开始
 
@@ -163,7 +205,7 @@ npm run dev
 
 ## 技术栈
 
-- **框架**：Next.js 14（App Router）
+- **框架**：Next.js 15（App Router）
 - **语言**：TypeScript
 - **样式**：Tailwind CSS + CSS Variables 设计系统
 - **排盘**：基于 [iztro](https://github.com/SylarLong/iztro) + lunar-javascript
@@ -188,7 +230,7 @@ npm run dev
 | 内容 | 协议 | 简单说 |
 |------|------|--------|
 | **代码**（`lib/`、`app/`、`components/`） | [MIT License](./LICENSE) | 拿去随便用，保留 LICENSE 文件即可 |
-| **数据**（Releases 中的 51.8 万样本数据集 v3.0） | 自由使用 · 要求 attribution | 商用也行，**注明数据来源即可**，详见上文 [数据许可与引用](#数据许可与引用) |
+| **数据**（Releases 中的 51.8 万样本数据集 v3.0） | [CC BY 4.0](./DATASET-LICENSE) · 要求 attribution | 商用也行，**注明数据来源即可**，详见 [DATASET-LICENSE](./DATASET-LICENSE) |
 | **古籍原文**（骨髓赋、紫微斗数全集 / 全书等） | Public Domain | 古书都是公有领域，不存在版权 |
 
 **一句话**：拿去用，商用也行，把数据来源链接带上就行。
