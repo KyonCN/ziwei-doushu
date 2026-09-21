@@ -12,9 +12,10 @@
  *  - 《紫微斗数全集》（陈抟祖师传，明代刊本）
  *  - 《紫微斗数全书》（罗洪先编，明代刊本）
  *  - 《骨髓赋》《女命骨髓赋》《十二宫诸星得地合格诀》
- *  - 倪海厦《天纪》紫微斗数讲义
+ *  - 倪师《天纪》紫微斗数讲义
  */
 
+import 'server-only';
 import type { ZiweiChart, Palace, Star } from './types';
 
 // ────────────────── 类型 ──────────────────
@@ -575,7 +576,7 @@ function detectFuBiJiaMing(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: '辅弼夹命',
     level: 'excellent',
-    description: '左辅右弼夹命，一生贵人不断、逢凶化吉。适合走仕途、大企业管理，有贵人提携之命。古书云"左辅右弼，终身福厚"。',
+    description: '左辅右弼夹命，传统论述认为此格象征贵人相助与福厚特质。适合走仕途、大企业管理等能发挥组织才能的方向。古书云"左辅右弼，终身福厚"——强调此格在组织协调中的优势。',
     palaces: ['命宫', prev.name, next.name],
     conditions: { required, bonus, breaking },
     source: '《紫微斗数全书·辅弼夹命》',
@@ -775,7 +776,7 @@ function detectLianShaYang(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: '廉杀羊',
     level: 'caution',
-    description: '廉贞、七杀、擎羊三星会照命宫三方，古书警示之凶格。主血光、官非、意外。本命有此格不必惊慌，但流年大限再触发时需特别谨慎驾驶、避免冲突、注意手术风险。',
+    description: '廉贞、七杀、擎羊三星会照命宫三方，传统论述中标记为需要特别关注的组合。此格在大限流年触发时提醒保持谨慎态度：驾驶安全、人际和平、医疗决策需理性——强调主动管理而非消极宿命。',
     palaces: ['命宫'],
     conditions: { required: ['廉贞、七杀、擎羊三星会照三方四正'] },
     source: '《紫微斗数全书·廉杀羊》',
@@ -790,7 +791,7 @@ function detectJuHuoYang(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: '巨火羊',
     level: 'caution',
-    description: '巨门、火星、擎羊三星会照，古书云"巨火羊，终身缢死"——古时凶格。现代理解为：易因口舌、激烈冲突而招大祸。需修身养性、慎言慎行，避免极端情绪。',
+    description: '巨门、火星、擎羊三星会照，传统古籍记载此格为需要警惕之组合（古文"终身缢死"为宿命论表述，今已不适用）。现代理解为：此组合象征直言易触发冲突、情绪激烈时需要自我觉察。修养方向是：练习温和表达、主动化解对立、培养情绪管理。',
     palaces: ['命宫'],
     conditions: { required: ['巨门、火星、擎羊三星会照三方四正'] },
     source: '《紫微斗数骨髓赋·巨火羊》',
@@ -805,7 +806,7 @@ function detectLingChangTuoWu(chart: ZiweiChart, patterns: Pattern[]) {
   patterns.push({
     name: '铃昌陀武',
     level: 'caution',
-    description: '铃星、文昌、陀罗、武曲四星齐会，古书云"铃昌陀武，限至投河"——古时大凶格。本命有此组合本身不必恐慌，但流年大限触发时需高度警觉重大决策、情绪起伏、水边活动。',
+    description: '铃星、文昌、陀罗、武曲四星齐会，传统古籍记载此为需要特别关注之组合（古文"限至投河"为宿命论表述，非现代理解）。现代建议为：此组合在大限流年触发时，提醒理性处理重大决策、关注情绪波动、维持生活的稳定性——强调主动管理而非消极等待。',
     palaces: ['命宫'],
     conditions: { required: ['铃星、文昌、陀罗、武曲四星会照三方四正'] },
     source: '《紫微斗数骨髓赋·铃昌陀武》',
@@ -826,7 +827,7 @@ function detectMaTouDaiJian(chart: ZiweiChart, ming: Palace, patterns: Pattern[]
   patterns.push({
     name: '马头带箭',
     level: bonus.length ? 'good' : 'caution',
-    description: '擎羊于午宫坐命，号"马头带箭"。古书云"威镇边疆"——主刚毅果决、有冲杀之力，宜军警武职、运动员、外科医师。但同时主危险与意外，需配合杀破狼或贵人方为大格，否则反主血光。',
+    description: '擎羊于午宫坐命，号"马头带箭"，古书云"威镇边疆"。此格象征果决行动力与竞争精神，适合需要执行力与果敢决策的职业方向。传统论述同时提醒此格需要配合吉利星曜才能最优发挥——强调组合影响而非单星独论。',
     palaces: ['命宫'],
     conditions: { required, bonus },
     source: '《紫微斗数骨髓赋·马头带箭》',
@@ -928,7 +929,7 @@ function detectHuaKeRuMingShen(chart: ZiweiChart, patterns: Pattern[]) {
   }
 }
 
-/** 机月同梁三星会（降级版）：天机/太阴/天同/天梁 任 3 星齐入三方四正 */
+/** 机月同梁三星会（3 星不全格，非四星真格）：天机/太阴/天同/天梁 任 3 星齐入三方四正 */
 function detectJiYueTongLiangPartial(chart: ZiweiChart, ming: Palace, patterns: Pattern[]) {
   const sanFangSet = sanFangAllStars(chart);
   const has = ['天机', '太阴', '天同', '天梁'].filter(s => sanFangSet.has(s));
@@ -938,10 +939,10 @@ function detectJiYueTongLiangPartial(chart: ZiweiChart, ming: Palace, patterns: 
   patterns.push({
     name: '机月同梁三星会',
     level: 'neutral',
-    description: `三方四正会齐${has.join('、')}，差${missing.join('、')}未会。机月同梁不全格，文质带谋，但稳定度不如四星齐。仍宜公职、教研、医疗、服务等需要积累与稳定的行业，关键看缺位星与四化的配合。`,
+    description: `机月同梁需天机、太阴、天同、天梁四星齐会三方四正方为完整真格；本盘只会齐其中 3 颗（${has.join('、')}），缺${missing.join('、')}未会，并非完整真格，力量减一档。文质带谋，宜公职、教研、医疗、服务等靠积累与稳定的行业，关键看缺位星与四化的配合。`,
     palaces: getSanFangPalaces(chart).filter(p => has.some(s => getMajorStarNames(p).includes(s))).map(p => p.name),
     conditions: { required: [`三方四正会${has.join('、')}（机月同梁缺${missing.join('、')}）`] },
-    source: '《紫微斗数全书·机月同梁格》（降级版）',
+    source: '《紫微斗数全书·机月同梁格》',
   });
   void ming;
 }

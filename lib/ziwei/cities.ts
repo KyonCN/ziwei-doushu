@@ -12,23 +12,121 @@ export const PROVINCES: ProvinceInfo[] = [
   // ─── 直辖市 ───────────────────────────────────────────
   {
     name: '北京市',
-    cities: [{ name: '北京', longitude: 116.4 }],
+    cities: [
+      // ★ 2026-08-23 用户反馈「直辖市内部也有分区，希望加上更准一些」→ 补全 16 区。
+      //   保留「北京」市级条目在首位：老用户历史命盘存的是它，删掉会对不上。
+      //   全市经度跨度 115.98–117.12（延庆↔平谷），约 1.14°，真太阳时最大差约 4.6 分钟——
+      //   出生时刻落在时辰交界 ±5 分钟内时，选市中心与选边缘区会得到不同时辰，整盘皆变。
+      { name: '北京', longitude: 116.4 },
+      { name: '东城', longitude: 116.42 },
+      { name: '西城', longitude: 116.37 },
+      { name: '朝阳', longitude: 116.49 },
+      { name: '丰台', longitude: 116.29 },
+      { name: '石景山', longitude: 116.22 },
+      { name: '海淀', longitude: 116.30 },
+      { name: '门头沟', longitude: 116.10 },
+      { name: '房山', longitude: 116.14 },
+      { name: '通州', longitude: 116.66 },
+      { name: '顺义', longitude: 116.65 },
+      { name: '昌平', longitude: 116.24 },
+      { name: '大兴', longitude: 116.34 },
+      { name: '怀柔', longitude: 116.64 },
+      { name: '平谷', longitude: 117.12 },
+      { name: '密云', longitude: 116.84 },
+      { name: '延庆', longitude: 115.98 },
+    ],
   },
   {
     name: '天津市',
-    cities: [{ name: '天津', longitude: 117.2 }],
+    cities: [
+      // 跨度 116.97–117.83（静海↔宁河），约 0.86°，真太阳时最大差约 3.4 分钟
+      { name: '天津', longitude: 117.2 },
+      { name: '和平', longitude: 117.21 },
+      { name: '河东', longitude: 117.24 },
+      { name: '河西', longitude: 117.22 },
+      { name: '南开', longitude: 117.15 },
+      { name: '河北', longitude: 117.20 },
+      { name: '红桥', longitude: 117.15 },
+      { name: '东丽', longitude: 117.31 },
+      { name: '西青', longitude: 117.01 },
+      { name: '津南', longitude: 117.36 },
+      { name: '北辰', longitude: 117.13 },
+      { name: '武清', longitude: 117.04 },
+      { name: '宝坻', longitude: 117.31 },
+      { name: '滨海新区', longitude: 117.70 },
+      { name: '宁河', longitude: 117.83 },
+      { name: '静海', longitude: 116.97 },
+      { name: '蓟州', longitude: 117.41 },
+    ],
   },
   {
     name: '上海市',
-    cities: [{ name: '上海', longitude: 121.5 }],
+    cities: [
+      // 跨度 121.12–121.56（青浦↔浦东新区），约 0.44°，真太阳时最大差约 1.8 分钟
+      { name: '上海', longitude: 121.5 },
+      { name: '黄浦', longitude: 121.49 },
+      { name: '徐汇', longitude: 121.44 },
+      { name: '长宁', longitude: 121.42 },
+      { name: '静安', longitude: 121.45 },
+      { name: '普陀', longitude: 121.40 },
+      { name: '虹口', longitude: 121.51 },
+      { name: '杨浦', longitude: 121.53 },
+      { name: '闵行', longitude: 121.38 },
+      { name: '宝山', longitude: 121.49 },
+      { name: '嘉定', longitude: 121.25 },
+      { name: '浦东新区', longitude: 121.56 },
+      { name: '金山', longitude: 121.34 },
+      { name: '松江', longitude: 121.23 },
+      { name: '青浦', longitude: 121.12 },
+      { name: '奉贤', longitude: 121.47 },
+      { name: '崇明', longitude: 121.40 },
+    ],
   },
   {
     name: '重庆市',
     cities: [
-      { name: '重庆', longitude: 106.6 },
+      // 主城九区
+      { name: '渝中', longitude: 106.6 },
+      { name: '大渡口', longitude: 106.5 },
+      { name: '江北', longitude: 106.6 },
+      { name: '沙坪坝', longitude: 106.5 },
+      { name: '九龙坡', longitude: 106.5 },
+      { name: '南岸', longitude: 106.6 },
+      { name: '北碚', longitude: 106.4 },
+      { name: '渝北', longitude: 106.6 },
+      { name: '巴南', longitude: 106.5 },
+      // 远郊区
       { name: '万州', longitude: 108.4 },
       { name: '涪陵', longitude: 107.4 },
       { name: '黔江', longitude: 108.8 },
+      { name: '长寿', longitude: 107.1 },
+      { name: '江津', longitude: 106.3 },
+      { name: '合川', longitude: 106.3 },
+      { name: '永川', longitude: 105.9 },
+      { name: '南川', longitude: 107.1 },
+      { name: '綦江', longitude: 106.7 },
+      { name: '大足', longitude: 105.7 },
+      { name: '璧山', longitude: 106.2 },
+      { name: '铜梁', longitude: 106.1 },
+      { name: '潼南', longitude: 105.8 },
+      { name: '荣昌', longitude: 105.6 },
+      { name: '开州', longitude: 108.4 },
+      { name: '梁平', longitude: 107.8 },
+      { name: '武隆', longitude: 107.8 },
+      // 县
+      { name: '城口', longitude: 108.7 },
+      { name: '丰都', longitude: 107.7 },
+      { name: '垫江', longitude: 107.4 },
+      { name: '忠县', longitude: 108.1 },
+      { name: '云阳', longitude: 108.7 },
+      { name: '奉节', longitude: 109.5 },
+      { name: '巫山', longitude: 109.9 },
+      { name: '巫溪', longitude: 109.6 },
+      // 自治县
+      { name: '石柱', longitude: 108.1 },
+      { name: '秀山', longitude: 109.0 },
+      { name: '酉阳', longitude: 108.8 },
+      { name: '彭水', longitude: 108.2 },
     ],
   },
 
@@ -62,6 +160,7 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '忻州', longitude: 112.7 },
       { name: '临汾', longitude: 111.5 },
       { name: '吕梁', longitude: 111.1 },
+      { name: '阳泉', longitude: 113.6 },
     ],
   },
   {
@@ -76,6 +175,9 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '乌兰察布', longitude: 113.1 },
       { name: '巴彦淖尔', longitude: 107.4 },
       { name: '锡林郭勒', longitude: 116.1 },
+      { name: '乌海', longitude: 106.8 },
+      { name: '兴安盟', longitude: 122.1 },
+      { name: '阿拉善盟', longitude: 105.7 },
     ],
   },
 
@@ -96,6 +198,7 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '朝阳', longitude: 120.5 },
       { name: '盘锦', longitude: 122.1 },
       { name: '葫芦岛', longitude: 120.8 },
+      { name: '铁岭', longitude: 123.8 },
     ],
   },
   {
@@ -125,8 +228,10 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '双鸭山', longitude: 131.2 },
       { name: '伊春', longitude: 128.9 },
       { name: '七台河', longitude: 130.8 },
+      { name: '抚远（中国最东）', longitude: 134.3 },
       { name: '鹤岗', longitude: 130.3 },
       { name: '黑河', longitude: 127.5 },
+      { name: '大兴安岭', longitude: 124.1 },
     ],
   },
 
@@ -182,6 +287,8 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '宿州', longitude: 116.9 },
       { name: '六安', longitude: 116.5 },
       { name: '亳州', longitude: 115.8 },
+      { name: '池州', longitude: 117.5 },
+      { name: '宣城', longitude: 118.8 },
     ],
   },
   {
@@ -257,6 +364,7 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '信阳', longitude: 114.1 },
       { name: '周口', longitude: 114.7 },
       { name: '驻马店', longitude: 114.0 },
+      { name: '济源', longitude: 112.6 },
     ],
   },
   {
@@ -275,6 +383,9 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '咸宁', longitude: 114.3 },
       { name: '随州', longitude: 113.4 },
       { name: '恩施', longitude: 109.5 },
+      { name: '仙桃', longitude: 113.4 },
+      { name: '潜江', longitude: 112.9 },
+      { name: '天门', longitude: 113.2 },
     ],
   },
   {
@@ -320,6 +431,8 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '潮州', longitude: 116.6 },
       { name: '揭阳', longitude: 116.4 },
       { name: '云浮', longitude: 112.0 },
+      { name: '汕尾', longitude: 115.4 },
+      { name: '河源', longitude: 114.7 },
     ],
   },
   {
@@ -353,6 +466,7 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '陵水', longitude: 110.0 },
       { name: '乐东', longitude: 109.2 },
       { name: '五指山', longitude: 109.5 },
+      { name: '三沙（中国最南）', longitude: 112.3 },
     ],
   },
 
@@ -476,6 +590,9 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '玉树', longitude: 97.0 },
       { name: '果洛', longitude: 100.2 },
       { name: '海西', longitude: 97.4 },
+      { name: '海北', longitude: 100.9 },
+      { name: '黄南', longitude: 102.0 },
+      { name: '海南州', longitude: 100.6 },
     ],
   },
   {
@@ -506,6 +623,53 @@ export const PROVINCES: ProvinceInfo[] = [
       { name: '塔城', longitude: 83.0 },
       { name: '阿勒泰', longitude: 88.1 },
       { name: '石河子', longitude: 86.1 },
+      { name: '塔什库尔干（中国最西）', longitude: 75.2 },
     ],
   },
+
+  // ─── 特别行政区 / 台湾 ──────────────────────────────────
+  {
+    name: '香港特别行政区',
+    cities: [
+      { name: '香港', longitude: 114.2 },
+      { name: '九龙', longitude: 114.2 },
+      { name: '新界', longitude: 114.2 },
+    ],
+  },
+  {
+    name: '澳门特别行政区',
+    cities: [
+      { name: '澳门', longitude: 113.5 },
+      { name: '氹仔', longitude: 113.6 },
+      { name: '路环', longitude: 113.6 },
+    ],
+  },
+  {
+    name: '台湾省',
+    cities: [
+      { name: '台北', longitude: 121.5 },
+      { name: '新北', longitude: 121.5 },
+      { name: '桃园', longitude: 121.3 },
+      { name: '台中', longitude: 120.7 },
+      { name: '台南', longitude: 120.2 },
+      { name: '高雄', longitude: 120.3 },
+      { name: '基隆', longitude: 121.7 },
+      { name: '新竹', longitude: 120.9 },
+      { name: '嘉义', longitude: 120.4 },
+      { name: '苗栗', longitude: 120.8 },
+      { name: '彰化', longitude: 120.5 },
+      { name: '南投', longitude: 120.7 },
+      { name: '云林', longitude: 120.5 },
+      { name: '屏东', longitude: 120.5 },
+      { name: '宜兰', longitude: 121.7 },
+      { name: '花莲', longitude: 121.6 },
+      { name: '台东', longitude: 121.1 },
+      { name: '澎湖', longitude: 119.6 },
+      { name: '金门', longitude: 118.3 },
+      { name: '连江', longitude: 119.9 },
+    ],
+  },
+
+  // 注：海外出生暂未支持，因 share.ts 真太阳时算法假设输入为北京时间(UTC+8)。
+  // 海外用户请把当地时间换算成北京时间再填写（或填出生时所在的中国时区相对城市）。
 ];

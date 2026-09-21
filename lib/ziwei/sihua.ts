@@ -1,17 +1,17 @@
 /**
- * 四化工具模块 — 年干 / 大限宫干 / 流年干 / 流月干 四化映射
+ * 四化工具模块 — 年干 / 大限宫干 / 流年干 / 流月干 / 流日干 / 流时干
  *                + 宫干自化检测 + 来因宫追溯
  *
- * 倪海厦《天纪》体系核心：
- *   本命四化 = 出生年天干四化（静态基础）
- *   大限四化 = 大限宫**宫干**（非本命年干）的四化（十年动态）
- *   流年四化 = 当年年干的四化（一年动态）
- *   自化     = 某宫的宫干四化，其中被化星恰在本宫
- *   来因宫   = 某颗化星的"动力来源宫"——即宫干引发该化的宫位
+ * 排盘口径（2026-07-21 铁律：排盘以文墨天机为准）：
+ *   本命四化 = 出生年天干四化（盘上朱红印章，始终显示）
+ *   运限四化 = 大限宫干 / 流年干 / 流月干 / 流日干 / 流时干 → 叠层色章
+ * 论断正文仍按倪师；本模块供排盘叠层使用。
  */
 
+import { Lunar } from 'lunar-javascript';
 import type { ZiweiChart, Palace, SiHua } from './types';
 import { SI_HUA_TABLE, STEMS } from './constants';
+import { CHILDHOOD_DAXIAN_INDEX, getChildhoodDaXianPalace } from './yunxian-context';
 
 // ─── 1) 由天干索引取四化四星 ───────────────────────────────────
 /** 天干索引 0-9 → { 禄, 权, 科, 忌 } 对应星名 */
@@ -43,16 +43,21 @@ export function getYearBranchIndex(year: number): number {
 /**
  * 大限宫干四化
  * @param chart 命盘
- * @param dxIndex 大限索引（chart.daXians[dxIndex]）
+ * @param dxIndex 大限索引（chart.daXians[dxIndex]）；童限传 CHILDHOOD_DAXIAN_INDEX
  * @returns 该大限的四化四星
  */
 export function getDaXianSiHua(
   chart: ZiweiChart,
   dxIndex: number,
+  year?: number,
 ): { stemIndex: number; stemName: string; transforms: Record<SiHua, string> } | null {
-  const dx = chart.daXians[dxIndex];
-  if (!dx) return null;
-  const dxPalace = chart.palaces.find(p => p.branch === dx.palaceBranch);
+  const dxPalace = dxIndex === CHILDHOOD_DAXIAN_INDEX
+    ? getChildhoodDaXianPalace(chart, year)
+    : (() => {
+        const dx = chart.daXians[dxIndex];
+        if (!dx) return null;
+        return chart.palaces.find(p => p.branch === dx.palaceBranch) ?? null;
+      })();
   if (!dxPalace) return null;
   const stemIndex = dxPalace.stem;
   return {
@@ -95,12 +100,85 @@ export function getLiuYueStemIndex(yearStem: number, month: number): number {
   return (yinStem + ((month - 1) % 12) + 10) % 10;
 }
 
-export function getLiuYueSiHua(yearStem: number, month: number): {
+export interface LiuYueSiHuaOptions {
+  /** 闰月流月按实际农历日的前后半月取本月/下月口径。 */
+  isLeapMonth?: boolean;
+  liuriDay?: number;
+  /** 闰十二月后半段跨到次年正月时使用的年干。 */
+  nextYearStem?: number;
+}
+
+export function getEffectiveLiuYueMonth(month: number, options: LiuYueSiHuaOptions = {}): number {
+  const normalizedMonth = Math.max(1, Math.min(12, Math.trunc(month)));
+  if (!options.isLeapMonth || (options.liuriDay ?? 1) <= 15) return normalizedMonth;
+  return normalizedMonth >= 12 ? 1 : normalizedMonth + 1;
+}
+
+export function getLiuYueSiHua(yearStem: number, month: number, options: LiuYueSiHuaOptions = {}): {
+  stemIndex: number;
+  stemName: string;
+  transforms: Record<SiHua, string>;
+  month: number;
+} {
+  const effectiveMonth = getEffectiveLiuYueMonth(month, options);
+  const sourceYearStem = options.isLeapMonth
+    && effectiveMonth === 1
+    && (options.liuriDay ?? 1) > 15
+    ? (options.nextYearStem ?? yearStem)
+    : yearStem;
+  const stemIndex = getLiuYueStemIndex(sourceYearStem, effectiveMonth);
+  return {
+    stemIndex,
+    stemName: STEMS[stemIndex] ?? '',
+    transforms: getSiHuaByStem(stemIndex),
+    month: effectiveMonth,
+  };
+}
+
+// ─── 5b) 流日四化（农历日柱天干）──────────────────────────────
+/**
+ * 流日天干四化：用农历年月日取日柱干（文墨「显示日干四化」）。
+ * 闰月传 isLeapMonth=true（lunar-javascript 以负月表示闰月）。
+ */
+export function getLiuRiSiHua(
+  lunarYear: number,
+  lunarMonth: number,
+  lunarDay: number,
+  isLeapMonth = false,
+): { stemIndex: number; stemName: string; transforms: Record<SiHua, string> } | null {
+  try {
+    const monthKey = isLeapMonth ? -Math.abs(lunarMonth) : Math.abs(lunarMonth);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lunar = (Lunar as any).fromYmd(lunarYear, monthKey, lunarDay) as { getDayGan(): string };
+    const stemIndex = STEMS.indexOf(lunar.getDayGan());
+    if (stemIndex < 0) return null;
+    return {
+      stemIndex,
+      stemName: STEMS[stemIndex] ?? '',
+      transforms: getSiHuaByStem(stemIndex),
+    };
+  } catch {
+    return null;
+  }
+}
+
+// ─── 5c) 流时四化（五鼠遁：日干起子时天干）───────────────────
+/** 时支 0=子…11=亥；日干推时干后取四化 */
+export function getLiuShiSiHua(dayStemIndex: number, hourBranch: number): {
   stemIndex: number;
   stemName: string;
   transforms: Record<SiHua, string>;
 } {
-  const stemIndex = getLiuYueStemIndex(yearStem, month);
+  // 甲己→甲子，乙庚→丙子，丙辛→戊子，丁壬→庚子，戊癸→壬子
+  const ziStemByDayStem: Record<number, number> = {
+    0: 0, 5: 0,
+    1: 2, 6: 2,
+    2: 4, 7: 4,
+    3: 6, 8: 6,
+    4: 8, 9: 8,
+  };
+  const branch = ((Math.trunc(hourBranch) % 12) + 12) % 12;
+  const stemIndex = ((ziStemByDayStem[dayStemIndex] ?? 0) + branch) % 10;
   return {
     stemIndex,
     stemName: STEMS[stemIndex] ?? '',
